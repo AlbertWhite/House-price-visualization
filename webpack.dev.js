@@ -1,5 +1,8 @@
 const path = require('path')
 const webpack = require('webpack')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   entry: {
@@ -22,14 +25,24 @@ module.exports = {
   },
   devtool: 'inline-source-map',
   devServer: {
-    contentBase: './',
-    hot: true,
-    publicPath: './dist'
+    // live reloading already works with dev server
+    contentBase: './dist',
+    hot: true // Hot module replacement,
   },
   mode: 'development',
   output: {
-    filename: '[name].bundle.js',
+    filename: 'index.bundle.js',
     path: path.resolve(__dirname, 'dist')
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()] // https://webpack.js.org/guides/hot-module-replacement/
+  plugins: [
+    new CleanWebpackPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    new HtmlWebpackPlugin({
+      title: 'House price visualization'
+    }),
+    new CopyPlugin([{ from: 'static', to: 'dist' }])
+  ], // https://webpack.js.org/guides/hot-module-replacement/
+  resolve: {
+    extensions: ['.js', '.scss']
+  }
 }

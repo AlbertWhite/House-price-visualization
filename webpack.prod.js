@@ -1,6 +1,8 @@
 const path = require('path')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   entry: {
@@ -23,8 +25,15 @@ module.exports = {
     ]
   },
   output: {
-    filename: '[name].bundle.js',
+    filename: 'index.bundle.js',
     path: path.resolve(__dirname, 'dist')
   },
-  plugins: [new UglifyJSPlugin({ sourceMap: true }), new CleanWebpackPlugin()]
+  plugins: [
+    new UglifyJSPlugin({ sourceMap: true }),
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      title: 'House price visualization'
+    }),
+    new CopyPlugin([{ from: 'static', to: './' }])
+  ]
 }
