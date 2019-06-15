@@ -1,23 +1,35 @@
 const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
+const webpack = require('webpack')
 
 module.exports = {
-  devtool: 'inline-source-map',
-  devServer: {
-    contentBase: './dist'
-  },
   entry: {
     index: './src/index.js'
   },
-  plugins: [
-    new CleanWebpackPlugin(['dist']),
-    new HtmlWebpackPlugin({
-      title: 'output management'
-    })
-  ],
+  module: {
+    rules: [
+      {
+        test: /.js$/,
+        exclude: /(node_modules)/,
+        use: {
+          loader: 'babel-loader'
+        }
+      },
+      {
+        test: /.scss$/,
+        use: ['style-loader', 'css-loader', 'sass-loader']
+      }
+    ]
+  },
+  devtool: 'inline-source-map',
+  devServer: {
+    contentBase: './',
+    hot: true,
+    publicPath: './dist'
+  },
+  mode: 'development',
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist')
-  }
+  },
+  plugins: [new webpack.HotModuleReplacementPlugin()] // https://webpack.js.org/guides/hot-module-replacement/
 }
