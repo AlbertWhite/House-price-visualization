@@ -61,19 +61,19 @@ d3.json(
     .style('fill', '#fff')
 
   var populationFormat = d3.format(',')
+  var tip = d3Tip()
+    .attr('class', 'd3-tip')
+    .offset([-10, 0])
+    .html(function(d) {
+      return d.name + ': ' + populationFormat(d.population)
+    })
 
-  // var tip = d3Tip
-  //   .attr('class', 'd3-tip')
-  //   .offset([-10, 0])
-  //   .html(function(d) {
-  //     return d.name + ': ' + populationFormat(d.population)
-  //   })
-
-  // svg.call(tip)
+  svg.call(tip)
 
   var rScale = d3.scaleSqrt()
 
   function render(data) {
+    console.log('ax', { data })
     rScale.domain([
       0,
       d3.max(data, function(d) {
@@ -106,16 +106,17 @@ d3.json(
   }
 
   function type(d) {
-    console.log('ax', { d })
     d.latitude = +d.latitude
     d.longitude = +d.longitude
     d.population = +d.population
     return d
   }
 
-  d3.csv('./cities.csv')
-    .row(type)
-    .get(render)
+  d3.dsv(
+    ',',
+    'https://raw.githubusercontent.com/AlbertWhite/visualization/master/static/cities.csv',
+    type
+  ).then(render)
 })
 
 d3.select(self.frameElement).style('height', height + 'px')
