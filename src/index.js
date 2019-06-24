@@ -5,7 +5,7 @@ import './index.scss'
 
 var xColumn = 'longitude'
 var yColumn = 'latitude'
-var rColumn = 'population'
+var rColumn = 'price'
 var peoplePerPixel = 50000
 
 var width = 960,
@@ -65,7 +65,7 @@ d3.json(
     .attr('class', 'd3-tip')
     .offset([-10, 0])
     .html(function(d) {
-      return d.name + ': ' + populationFormat(d.population)
+      return d.name + ': ' + populationFormat(d.price)
     })
 
   svg.call(tip)
@@ -108,7 +108,7 @@ d3.json(
   function type(d) {
     d.latitude = +d.latitude
     d.longitude = +d.longitude
-    d.population = +d.population
+    d.price = +d.price
     return d
   }
 
