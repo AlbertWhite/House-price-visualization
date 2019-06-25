@@ -73,7 +73,6 @@ d3.json(
   var rScale = d3.scaleSqrt()
 
   function render(data) {
-    console.log('ax', { data })
     rScale.domain([
       0,
       d3.max(data, function(d) {
@@ -95,6 +94,8 @@ d3.json(
         return projection([d[xColumn], d[yColumn]])[0]
       })
       .attr('cy', function(d) {
+        // console.warn('alb', d[xColumn])
+        // console.warn('alb', d[yColumn])
         return projection([d[xColumn], d[yColumn]])[1]
       })
       .attr('r', function(d) {
