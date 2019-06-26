@@ -1,9 +1,6 @@
 import * as d3 from 'd3'
 
 export const initSvg = (width, height, path) => {
-  // maybe we can do something here to make the map bigger
-  const projection = d3.geoMercator()
-
   // add svg
   const svg = d3
     .select('body')
