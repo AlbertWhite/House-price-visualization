@@ -1,56 +1,31 @@
 import * as d3 from 'd3'
 import * as topojson from 'topojson'
 import d3Tip from 'd3-tip'
+import { initSvg } from './initSvg'
 import './index.scss'
+import 'babel-polyfill'
 
-var xColumn = 'longitude'
-var yColumn = 'latitude'
-var rColumn = 'price'
-var peoplePerPixel = 50000
+const xColumn = 'longitude'
+const yColumn = 'latitude'
+const rColumn = 'price'
+const peoplePerPixel = 5000
+const width = 1060
+const height = 450
+// https://github.com/d3/d3-geo#geoPath
+// maybe we can do something here to make the map bigger
+const projection = d3.geoMercator()
+const path = d3.geoPath().projection(projection)
 
-var width = 960,
-  height = 580
-var projection = d3.geoMercator()
-
-var path = d3.geoPath().projection(projection)
-
-var graticule = d3.geoGraticule()
-
-var svg = d3
-  .select('body')
-  .append('svg')
-  .attr('width', width)
-  .attr('height', height)
-
-svg
-  .append('defs')
-  .append('path')
-  .datum({ type: 'Sphere' })
-  .attr('id', 'sphere')
-  .attr('d', path)
-
-svg
-  .append('use')
-  .attr('class', 'stroke')
-  .attr('xlink:href', '#sphere')
-
-svg
-  .append('use')
-  .attr('class', 'fill')
-  .attr('xlink:href', '#sphere')
-
-svg
-  .append('path')
-  .datum(graticule)
-  .attr('class', 'graticule')
-  .attr('d', path)
-
-d3.json(
+const countryJsonUrl =
   'https://gist.githubusercontent.com/mbostock/4090846/raw/d534aba169207548a8a3d670c9c2cc719ff05c47/world-50m.json'
-).then(world => {
-  var countries = topojson.feature(world, world.objects.countries).features,
-    neighbors = topojson.neighbors(world.objects.countries.geometries)
 
+;(async () => {
+  const svg = initSvg(width, height, path)
+  const world = await d3.json(countryJsonUrl)
+
+  const countries = topojson.feature(world, world.objects.countries).features
+
+  // add countries
   svg
     .selectAll('.country')
     .data(countries)
@@ -58,10 +33,9 @@ d3.json(
     .insert('path', '.graticule')
     .attr('class', 'country')
     .attr('d', path)
-    .style('fill', '#fff')
 
-  var populationFormat = d3.format(',')
-  var tip = d3Tip()
+  const populationFormat = d3.format(',')
+  const tip = d3Tip()
     .attr('class', 'd3-tip')
     .offset([-10, 0])
     .html(function(d) {
@@ -70,7 +44,7 @@ d3.json(
 
   svg.call(tip)
 
-  var rScale = d3.scaleSqrt()
+  const rScale = d3.scaleSqrt()
 
   function render(data) {
     rScale.domain([
@@ -81,12 +55,12 @@ d3.json(
     ])
 
     // Compute the size of the biggest circle as a function of peoplePerPixel.
-    var peopleMax = rScale.domain()[1]
-    var rMin = 0
-    var rMax = Math.sqrt(peopleMax / (peoplePerPixel * Math.PI))
+    const peopleMax = rScale.domain()[1]
+    const rMin = 0
+    const rMax = Math.sqrt(peopleMax / (peoplePerPixel * Math.PI))
     rScale.range([rMin, rMax])
 
-    var circles = svg.selectAll('circle').data(data)
+    const circles = svg.selectAll('circle').data(data)
     circles
       .enter()
       .append('svg:circle')
@@ -94,8 +68,6 @@ d3.json(
         return projection([d[xColumn], d[yColumn]])[0]
       })
       .attr('cy', function(d) {
-        // console.warn('alb', d[xColumn])
-        // console.warn('alb', d[yColumn])
         return projection([d[xColumn], d[yColumn]])[1]
       })
       .attr('r', function(d) {
@@ -118,6 +90,7 @@ d3.json(
     'https://raw.githubusercontent.com/AlbertWhite/visualization/master/static/cities.csv',
     type
   ).then(render)
-})
+})()
 
-d3.select(self.frameElement).style('height', height + 'px')
+// dont'know what it is
+// d3.select(self.frameElement).style('height', height + 'px')

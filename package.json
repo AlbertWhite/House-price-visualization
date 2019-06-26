@@ -8,6 +8,7 @@
     "start": "webpack-dev-server --open --config webpack.dev.js --profile --inline --progress"
   },
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "d3": "^5.9.2",
     "d3-tip": "^0.9.1",
     "topojson": "^3.0.2"
