@@ -34,8 +34,11 @@ export async function initCountry(width, height, path) {
 
   // zoom and pan example: http://bl.ocks.org/curran/752b97cef3f880a813ab
 
+  // const countryJsonUrl =
+  //   'https://gist.githubusercontent.com/mbostock/4090846/raw/d534aba169207548a8a3d670c9c2cc719ff05c47/world-50m.json'
+
   const countryJsonUrl =
-    'https://gist.githubusercontent.com/mbostock/4090846/raw/d534aba169207548a8a3d670c9c2cc719ff05c47/world-50m.json'
+    'https://raw.githubusercontent.com/AlbertWhite/visualization/master/static/world.json'
   const world = await d3.json(countryJsonUrl)
   const countries = topojson.feature(world, world.objects.countries).features
   // add countries
