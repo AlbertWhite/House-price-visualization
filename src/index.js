@@ -1,52 +1,35 @@
 import * as d3 from 'd3'
-import * as topojson from 'topojson'
+
 import d3Tip from 'd3-tip'
-import { initSvg } from './initSvg'
+import { initCountry } from './init'
 import './index.scss'
 import 'babel-polyfill'
 
 const xColumn = 'longitude'
 const yColumn = 'latitude'
 const rColumn = 'price'
-const peoplePerPixel = 5000
 const width = 1060
-const height = 450
+const height = 850
 // https://github.com/d3/d3-geo#geoPath
 // maybe we can do something here to make the map bigger
 const projection = d3.geoMercator()
 const path = d3.geoPath().projection(projection)
 
-const countryJsonUrl =
-  'https://gist.githubusercontent.com/mbostock/4090846/raw/d534aba169207548a8a3d670c9c2cc719ff05c47/world-50m.json'
-
 ;(async () => {
-  const svg = initSvg(width, height, path)
-  const world = await d3.json(countryJsonUrl)
+  const svg = await initCountry(width, height, path)
 
-  const countries = topojson.feature(world, world.objects.countries).features
+  const priceFormat = d3.format(',')
 
-  // add countries
-  svg
-    .selectAll('.country')
-    .data(countries)
-    .enter()
-    .insert('path', '.graticule')
-    .attr('class', 'country')
-    .attr('d', path)
-
-  const populationFormat = d3.format(',')
+  // create tooltip
   const tip = d3Tip()
     .attr('class', 'd3-tip')
     .offset([-10, 0])
-    .html(function(d) {
-      return d.name + ': ' + populationFormat(d.price)
-    })
-
+    .html(d => d.name + ': ' + priceFormat(d.price))
   svg.call(tip)
 
-  const rScale = d3.scaleSqrt()
-
-  function render(data) {
+  // renderCity
+  const renderCity = data => {
+    const rScale = d3.scaleSqrt()
     rScale.domain([
       0,
       d3.max(data, function(d) {
@@ -57,6 +40,7 @@ const countryJsonUrl =
     // Compute the size of the biggest circle as a function of peoplePerPixel.
     const peopleMax = rScale.domain()[1]
     const rMin = 0
+    const peoplePerPixel = 50
     const rMax = Math.sqrt(peopleMax / (peoplePerPixel * Math.PI))
     rScale.range([rMin, rMax])
 
@@ -78,7 +62,7 @@ const countryJsonUrl =
     circles.exit().remove()
   }
 
-  function type(d) {
+  const cityDataType = d => {
     d.latitude = +d.latitude
     d.longitude = +d.longitude
     d.price = +d.price
@@ -88,9 +72,6 @@ const countryJsonUrl =
   d3.dsv(
     ',',
     'https://raw.githubusercontent.com/AlbertWhite/visualization/master/static/cities.csv',
-    type
-  ).then(render)
+    cityDataType
+  ).then(renderCity)
 })()
-
-// dont'know what it is
-// d3.select(self.frameElement).style('height', height + 'px')
