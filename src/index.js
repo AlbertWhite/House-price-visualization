@@ -8,11 +8,14 @@ import 'babel-polyfill'
 const xColumn = 'longitude'
 const yColumn = 'latitude'
 const rColumn = 'price'
-const width = 1060
-const height = 850
+const width = 1560
+const height = 650
 // https://github.com/d3/d3-geo#geoPath
 // maybe we can do something here to make the map bigger
-const projection = d3.geoMercator()
+const projection = d3
+  .geoEquirectangular()
+  .scale([width / (2 * Math.PI)]) // scale to fit group width
+  .translate([width / 2, height / 2]) // ensure centred in group
 const path = d3.geoPath().projection(projection)
 
 ;(async () => {
