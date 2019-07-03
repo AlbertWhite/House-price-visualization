@@ -30,15 +30,6 @@ const path = d3.geoPath().projection(projection)
     .html(d => d.name + ': ' + priceFormat(d.price))
   svg.call(tip)
 
-  const zoomed = () => {
-    const t = d3.event.transform
-    svg.attr('transform', 'translate(' + [t.x, t.y] + ')scale(' + t.k + ')')
-  }
-
-  const zoom = d3.zoom().on('zoom', zoomed)
-
-  svg.call(zoom)
-
   // renderCity
   const renderCity = data => {
     const rScale = d3.scaleSqrt()
@@ -81,9 +72,17 @@ const path = d3.geoPath().projection(projection)
     return d
   }
 
+  // entry point
   d3.dsv(
     ',',
     'https://raw.githubusercontent.com/AlbertWhite/visualization/master/static/cities.csv',
     cityDataType
   ).then(renderCity)
+
+  window.resize = () => {
+    // keep same space not working for zoom
+    // also need to define maximum and minimum zoom
+    // to see it is possible or not to catch the hovered circle
+    svg.attr('width', width).attr('height', height)
+  }
 })()
