@@ -30,6 +30,15 @@ const path = d3.geoPath().projection(projection)
     .html(d => d.name + ': ' + priceFormat(d.price))
   svg.call(tip)
 
+  const zoomed = () => {
+    const t = d3.event.transform
+    svg.attr('transform', 'translate(' + [t.x, t.y] + ')scale(' + t.k + ')')
+  }
+
+  const zoom = d3.zoom().on('zoom', zoomed)
+
+  svg.call(zoom)
+
   // renderCity
   const renderCity = data => {
     const rScale = d3.scaleSqrt()
