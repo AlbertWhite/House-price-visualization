@@ -7,9 +7,10 @@ import 'babel-polyfill'
 
 const xColumn = 'longitude'
 const yColumn = 'latitude'
-const rColumn = 'price'
-const width = 1560
-const height = 650
+const priceColumn = 'price'
+const ratioColumn = 'ratio'
+const width = window.innerWidth
+const height = window.innerWidth / 2 // the map is 2:1
 // https://github.com/d3/d3-geo#geoPath
 // maybe we can do something here to make the map bigger
 const projection = d3
@@ -21,13 +22,23 @@ const path = d3.geoPath().projection(projection)
 ;(async () => {
   const svg = await initCountry(width, height, path)
 
-  const priceFormat = d3.format(',')
+  const renderToolTip = d => {
+    return `
+    <div class="tooltip">
+      <div class="cityName">${d.name}</div>
+      <div class="cityPrice">Average price (m<sup>2</sup>): <b>$${
+        d.price
+      }</b></div>
+      <div>Price to income ratio: <b>${d.ratio}</b></div>
+    </div>
+      `
+  }
 
   // create tooltip
   const tip = d3Tip()
     .attr('class', 'd3-tip')
     .offset([-10, 0])
-    .html(d => d.name + ': ' + priceFormat(d.price))
+    .html(renderToolTip)
   svg.call(tip)
 
   // renderCity
@@ -36,14 +47,14 @@ const path = d3.geoPath().projection(projection)
     rScale.domain([
       0,
       d3.max(data, function(d) {
-        return d[rColumn]
+        return d[ratioColumn]
       })
     ])
 
     // Compute the size of the biggest circle as a function of peoplePerPixel.
     const peopleMax = rScale.domain()[1]
     const rMin = 0
-    const peoplePerPixel = 50
+    const peoplePerPixel = 0.08
     const rMax = Math.sqrt(peopleMax / (peoplePerPixel * Math.PI))
     rScale.range([rMin, rMax])
 
@@ -58,7 +69,7 @@ const path = d3.geoPath().projection(projection)
         return projection([d[xColumn], d[yColumn]])[1]
       })
       .attr('r', function(d) {
-        return rScale(d[rColumn])
+        return rScale(d[ratioColumn])
       })
       .on('mouseover', tip.show)
       .on('mouseout', tip.hide)
@@ -79,10 +90,8 @@ const path = d3.geoPath().projection(projection)
     cityDataType
   ).then(renderCity)
 
-  window.resize = () => {
-    // keep same space not working for zoom
-    // also need to define maximum and minimum zoom
-    // to see it is possible or not to catch the hovered circle
-    svg.attr('width', width).attr('height', height)
-  }
+  // add header
+  const headerHeight =
+    window.innerHeight - document.querySelector('svg').clientHeight
+  document.querySelector('.header').style.height = `${headerHeight}px`
 })()

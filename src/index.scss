@@ -10,6 +10,8 @@ body {
 
 svg {
   width: 100%;
+  position: absolute;
+  bottom: 0;
 }
 
 path {
@@ -18,7 +20,7 @@ path {
 }
 
 circle {
-  stroke: red;
+  stroke: #303030;
   fill: rgba(0, 0, 0, 0.2);
 }
 
@@ -33,10 +35,92 @@ circle:hover {
 
 .d3-tip {
   font-family: 'Raleway', sans-serif;
-  font-size: 1.5em;
-  line-height: 1;
-  padding: 7px;
+  font-size: 15px;
+  line-height: 1.2em;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border-radius: 10px;
+  text-align: right;
+  opacity: 0.9;
+  &:after {
+    top: 100%;
+    left: 50%;
+    border: solid transparent;
+    content: ' ';
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-color: rgba(213, 55, 55, 0);
+    border-top-color: rgba(0, 0, 0, 0.8);
+    border-width: 10px;
+    margin-left: -10px;
+  }
+}
+
+.fill {
+  position: absolute;
+  bottom: 0;
+}
+
+.cityName {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.cityPrice {
+  margin-bottom: 5px;
+}
+
+.header {
+  background-color: #98ccfc;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: 20px;
+}
+
+.header-title {
   background: black;
-  color: lightgray;
-  border-radius: 20px;
+  font-size: 23px;
+  width: 400px;
+  padding: 10px;
+}
+
+.header-content {
+  background: black;
+  font-size: 15px;
+  padding: 4 10px;
+  z-index: 100;
+  color: rgba(255, 255, 255, 0.9);
+  a {
+    color: #98ccfc;
+    &:hover,
+    &:active,
+    &:focus {
+      color: #98ccfc;
+    }
+  }
+}
+
+.footer {
+  position: absolute;
+  bottom: 50px;
+  z-index: 100;
+  width: 100%;
+  text-align: center;
+  color: black;
+  font-size: 12px;
+  a {
+    color: black;
+    &:hover,
+    &:active,
+    &:focus {
+      color: black;
+    }
+  }
 }

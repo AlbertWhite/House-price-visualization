@@ -32,7 +32,8 @@ module.exports = {
     new UglifyJSPlugin({ sourceMap: true }),
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      title: 'House price visualization'
+      title: 'House price visualization',
+      template: 'index.html'
     }),
     new CopyPlugin([{ from: 'static', to: './' }])
   ]

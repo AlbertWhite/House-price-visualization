@@ -38,7 +38,8 @@ module.exports = {
     new CleanWebpackPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
-      title: 'House price visualization'
+      title: 'House price visualization',
+      template: 'index.html'
     }),
     new CopyPlugin([{ from: 'static', to: 'dist' }])
   ], // https://webpack.js.org/guides/hot-module-replacement/
