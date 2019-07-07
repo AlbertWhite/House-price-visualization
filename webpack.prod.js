@@ -26,7 +26,7 @@ module.exports = {
   },
   output: {
     filename: 'index.bundle.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'doc')
   },
   plugins: [
     new UglifyJSPlugin({ sourceMap: true }),
