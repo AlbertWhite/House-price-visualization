@@ -10,6 +10,7 @@ body {
   bottom: 0;
   left: 0;
   background: var(--sea-color);
+  font-family: 'Raleway', sans-serif;
 }
 
 svg {
@@ -48,6 +49,7 @@ circle:hover {
   text-align: right;
   opacity: 0.9;
   z-index: 999;
+
   &:after {
     top: 100%;
     left: 50%;
@@ -94,6 +96,8 @@ circle:hover {
   font-size: 23px;
   width: 400px;
   padding: 10px;
+  z-index: 100;
+  margin-bottom: 1px;
 }
 
 .header-content {
@@ -102,8 +106,10 @@ circle:hover {
   padding: 4 10px;
   z-index: 100;
   color: rgba(255, 255, 255, 0.9);
+
   a {
     color: #98ccfc;
+
     &:hover,
     &:active,
     &:focus {
@@ -120,8 +126,10 @@ circle:hover {
   text-align: center;
   color: black;
   font-size: 12px;
+
   a {
     color: black;
+
     &:hover,
     &:active,
     &:focus {
