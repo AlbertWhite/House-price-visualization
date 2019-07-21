@@ -10,7 +10,13 @@ const yColumn = 'latitude'
 const priceColumn = 'price'
 const ratioColumn = 'ratio'
 const width = window.innerWidth
-const height = window.innerWidth / 2 // the map is 2:1
+let height = window.innerWidth / 2 // the map is 2:1
+
+if (height < 210) {
+  // deal with responsive
+  height = 500
+}
+
 // https://github.com/d3/d3-geo#geoPath
 // maybe we can do something here to make the map bigger
 const projection = d3

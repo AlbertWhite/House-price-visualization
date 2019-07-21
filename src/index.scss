@@ -1,3 +1,7 @@
+:root {
+  --sea-color: rgb(152, 204, 255);
+}
+
 body {
   margin: 0;
   position: fixed;
@@ -5,7 +9,7 @@ body {
   right: 0;
   bottom: 0;
   left: 0;
-  background: white;
+  background: var(--sea-color);
 }
 
 svg {
@@ -15,7 +19,7 @@ svg {
 }
 
 path {
-  fill: rgb(152, 204, 255); // the background color
+  fill: var(--sea-color); // the background color
   color: green;
 }
 
